@@ -1,15 +1,16 @@
 import express from 'express'
 import Url from '../models/Url.js'
+import { nanoid } from 'nanoid'
 
 const router = express.Router();
 
 router.post('/shorten',async(req,res)=>{
     try {
-        const {originalurl} = req.body;
-        if(!originalurl) return res.status(400).json({error: 'Please provide a URL'})
+        const {originalUrl} = req.body;
+        if(!originalUrl) return res.status(400).json({error: 'Please provide a URL'})
 
         try {
-            new URL(originalurl)
+            new URL(originalUrl)
         } catch (error) {
             return res.status(400).json({error:"Invalid URL"})
         }
@@ -23,7 +24,7 @@ router.post('/shorten',async(req,res)=>{
         }
 
         const url = await Url.create({
-            originalurl,
+            originalUrl,
             shortId
         })
 
