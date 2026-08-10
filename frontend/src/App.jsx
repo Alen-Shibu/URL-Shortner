@@ -10,10 +10,13 @@ const App = () => {
   const [shortUrl, setShortUrl] = useState('')
   const [copied, setCopied] = useState(false)
   const [qrImage, setQrImage] = useState('')
+  const [loading, setLoading] = useState(false)
 
   const handleShorten = async() => {
     try {
       if(!url) return;
+
+      setLoading(true)
 
       const res = await axios.post(`${API_BASE_URL}/shorten`,{
         originalUrl:url
@@ -26,9 +29,14 @@ const App = () => {
 
       const qr = await QRCodeGenerator.toDataURL(newUrl)
       setQrImage(qr)
-    } catch (error) {
+
+    } 
+    catch (error) {
       console.log(error)
       alert("Something went wrong")
+    }
+    finally{
+      setLoading(false)
     }
   }
 
@@ -43,7 +51,7 @@ const App = () => {
       <h1 className="text-4xl font-bold mb-6">URL Shortner</h1>
       <div className="flex flex-col gap-3 w-full max-w-3xl">
         <input className="input input-success w-full" type="text" placeholder="Enter long URL" value={url} onChange={(e)=> setUrl(e.target.value)}/>
-        <button className="btn btn-primary w-full sm:auto" onClick={handleShorten}>Shorten</button>
+        <button className="btn btn-primary w-full sm:auto" onClick={handleShorten} disabled={loading}>Shorten</button>
       </div>
       {
         shortUrl && (
