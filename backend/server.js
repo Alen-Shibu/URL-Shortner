@@ -12,6 +12,10 @@ app.use(cors({
     methods: ['GET','POST'],
 }))
 
+app.get('/health',(_,res)=>{
+    res.status(200).json({message:"ok"})
+})
+
 app.use('/',urlRoutes)
 
 mongoose.connect(process.env.MONGO_URI)
